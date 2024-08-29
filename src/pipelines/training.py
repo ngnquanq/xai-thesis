@@ -27,3 +27,13 @@ def training(
     dataset_trn, dataset_tst, preprocess_pipeline = train_data_preprocessor(dataset_trn = dataset_trn,
                                                                  dataset_tst = dataset_tst)
     
+    ################ Hyper parameter tuning ###############
+    after = []
+    search_steps_prefix = "hp_tuning_search_"
+    
+    # Need to do
+    best_model = None
+    
+    #################### Training Stage ######################
+    model = model_trainer(dataset_trn=dataset_trn, 
+                          model=best_model)
