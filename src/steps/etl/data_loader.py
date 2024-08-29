@@ -49,7 +49,8 @@ def data_loader(
         dataset = inference_subset
         dataset.drop(columns=target, inplace=True)
     else:
-        dataset.drop(inference_subset.index, inplace=True)
+        #dataset.drop(inference_subset.index, inplace=True)
+        pass
     dataset.reset_index(drop=True, inplace=True)
     logger.info(f"Dataset with {len(dataset)} records loaded!")
     ### YOUR CODE ENDS HERE ###
