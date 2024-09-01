@@ -1,0 +1,135 @@
+# 
+
+# environment configuration
+settings:
+  docker:
+    required_integrations:
+      - aws
+      - kubeflow
+      - kubernetes
+      - mlflow
+      - sklearn
+      - slack
+
+# configuration of steps  
+steps:
+  model_trainer:
+    parameters:
+      name: model
+  promote_with_metric_compare:
+    parameters:
+      mlflow_model_name: model
+  notify_on_success:
+    parameters:
+      notify_on_success: False
+
+# configuration of the Model Control Plane
+model:
+  name: model
+  license: none
+  description: e2e_use_case_for_churn E2E Batch Use Case
+  audience: All ZenML users
+  use_cases: |
+    The ZenML E2E project for Churn prediction project demonstrates how the most important steps of 
+    the ML Production Lifecycle can be implemented in a reusable way remaining 
+    agnostic to the underlying infrastructure, and shows how to integrate them together 
+    into pipelines for Training and Batch Inference purposes.
+  ethics: No impact.
+  tags:
+  - e2e
+  - batch
+  - sklearn
+  - from template
+  - ZenML delivered
+
+# pipeline level extra configurations
+extra:
+  notify_on_failure: True
+# pipeline level parameters
+parameters:
+  target_env: staging
+  # This set contains all the model configurations that you want 
+  # to evaluate during the hyperparameter tuning stage.
+  model_search_space:
+    random_forest:
+      model_package: sklearn.ensemble
+      model_class: RandomForestClassifier
+      search_grid:
+        criterion:
+          - gini
+          - entropy
+        max_depth:
+          - 2
+          - 4
+          - 6
+          - 8
+          - 10
+          - 12
+        min_samples_leaf:
+          range:
+            start: 1
+            end: 10
+        n_estimators:
+          range:
+            start: 50
+            end: 500
+            step: 25
+
+    decision_tree:
+      model_package: sklearn.tree
+      model_class: DecisionTreeClassifier
+      search_grid:
+        criterion:
+          - gini
+          - entropy
+        max_depth:
+          - 2
+          - 4
+          - 6
+          - 8
+          - 10
+          - 12
+        min_samples_leaf:
+          range:
+            start: 1
+            end: 10
+
+    svm:
+      model_package: sklearn.svm
+      model_class: SVC  # Support Vector Classifier
+      search_grid:
+        C:
+          - 0.1
+          - 1
+          - 10
+          - 100
+        kernel:
+          - linear
+          - poly
+          - rbf
+          - sigmoid
+        degree:
+          - 3  # Used for 'poly' kernel, typically fixed
+        gamma:
+          - scale
+          - auto
+
+    logistic_regression:
+      model_package: sklearn.linear_model
+      model_class: LogisticRegression
+      search_grid:
+        C:
+          - 0.1
+          - 1
+          - 10
+          - 100
+        solver:
+          - newton-cg
+          - lbfgs
+          - liblinear
+          - sag
+          - saga
+        max_iter:
+          - 100
+          - 200
+          - 500

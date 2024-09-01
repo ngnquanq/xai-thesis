@@ -10,20 +10,10 @@ from typing import Annotated
 from zenml.integrations.mlflow.experiment_trackers import MLFlowExperimentTracker
 from zenml.integrations.mlflow.steps.mlflow_registry import mlflow_register_model_step
 from zenml.logger import get_logger
+from logging import getLogger
 
-logger = get_logger(__name__)
+logger = getLogger(__name__)
 
-experiment_tracker = Client().active_stack.experiment_tracker
-
-if not experiment_tracker or not isinstance(
-    experiment_tracker, MLFlowExperimentTracker
-):
-    raise RuntimeError(
-        "Your active stack needs to contain a MLFlow experiment tracker for "
-        "this example to work."
-    )
-    
-@step(experiment_tracker=experiment_tracker.name)
 def model_evaluator(
     model: ClassifierMixin,
     dataset_trn: pd.DataFrame,
@@ -82,7 +72,6 @@ def model_evaluator(
         dataset_tst[target],
     )
     logger.info(f"Test accuracy={tst_acc*100:.2f}%")
-    mlflow.log_metric("testing_accuracy_score", tst_acc)
 
     messages = []
     if trn_acc < min_train_accuracy:

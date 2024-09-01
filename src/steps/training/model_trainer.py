@@ -4,26 +4,10 @@ from typing_extensions import Annotated
 import mlflow
 import pandas as pd
 from sklearn.base import ClassifierMixin
-from zenml import ArtifactConfig, log_artifact_metadata, step, get_step_context
-from zenml.client import Client
-from zenml.integrations.mlflow.experiment_trackers import MLFlowExperimentTracker
-from zenml.integrations.mlflow.steps.mlflow_registry import mlflow_register_model_step
-from zenml.logger import get_logger
+from logging import getLogger
 
-logger = get_logger(__name__)
+logger = getLogger(__name__)
 
-experiment_tracker = Client().active_stack.experiment_tracker
-
-if not experiment_tracker or not isinstance(
-    experiment_tracker, MLFlowExperimentTracker
-):
-    raise RuntimeError(
-        "Your active stack needs to contain a MLFlow experiment tracker for "
-        "this example to work."
-    )
-
-
-#@step(experiment_tracker=experiment_tracker.name)
 def model_trainer(
     dataset_trn: pd.DataFrame,
     model: ClassifierMixin,
@@ -65,7 +49,6 @@ def model_trainer(
     # Initialize the model with the hyperparameters indicated in the step
     # parameters and train it on the training set.
     logger.info(f"Training model {model}...")
-    mlflow.sklearn.autolog()
     model.fit(
         dataset_trn.drop(columns=[target]),
         dataset_trn[target],
