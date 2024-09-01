@@ -12,7 +12,6 @@ from zenml.logger import get_logger
 logger = get_logger(__name__)
 
 
-@step
 def data_loader(
     random_state: int, is_inference: bool = False
 ) -> Tuple[
