@@ -8,13 +8,12 @@ import pandas as pd
 from sklearn.base import ClassifierMixin
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import RandomizedSearchCV
-from utils import get_model_from_config
+from utils import get_model_from_config, save_metadata
 from zenml import log_artifact_metadata, step
-from logging import 
-logger = get_logger(__name__)
+from logging import getLogger
+logger = getLogger(__name__)
 
 
-@step
 def hp_tuning_single_search(
     model_package: str,
     model_class: str,
@@ -58,7 +57,7 @@ def hp_tuning_single_search(
             )
 
     ### ADD YOUR OWN CODE HERE - THIS IS JUST AN EXAMPLE ###
-
+    logger.info("Preparing data for hyperparameter tuning...")
     X_trn = dataset_trn.drop(columns=[target])
     y_trn = dataset_trn[target]
     X_tst = dataset_tst.drop(columns=[target])
@@ -78,9 +77,11 @@ def hp_tuning_single_search(
     y_pred = cv.predict(X_tst)
     score = accuracy_score(y_tst, y_pred)
     # log score along with output artifact as metadata
-    log_artifact_metadata(
-        metadata={"metric": float(score)},
-        artifact_name="hp_result",
-    )
+    best_model_info = {
+        "best_model": str(cv.best_estimator_), 
+        "best_score": score,
+        "hyperparameters": cv.best_params_
+    }
+    save_metadata(best_model_info, 'hp_result.json')
     ### YOUR CODE ENDS HERE ###
     return cv.best_estimator_

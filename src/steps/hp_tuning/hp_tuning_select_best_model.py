@@ -1,57 +1,44 @@
-
-from typing import Any, Dict
+from typing import List, Dict
 from typing_extensions import Annotated
-
-import pandas as pd
 from sklearn.base import ClassifierMixin
-from sklearn.metrics import accuracy_score
-from sklearn.model_selection import RandomizedSearchCV
-from utils import get_model_from_config
 from logging import getLogger
 
 logger = getLogger(__name__)
 
-def hp_tuning_single_search(
-    model_package: str, 
-    model_class: str,
-    search_grid: Dict[str, Any],
-    dataset_trn: pd.DataFrame, 
-    dataset_tst: pd.DataFrame,
-    target: str
-) -> Annotated[ClassifierMixin, "hyper_tuning_result"]:
-    """Later
+def hp_tuning_select_best_model(
+    hp_results: List[Dict[str, Annotated[ClassifierMixin, "hp_result"]]],
+) -> Annotated[ClassifierMixin, "best_model"]:
+    """Find the best model across all HP tuning attempts.
+
+    This function takes the results from multiple hyperparameter tuning steps,
+    each represented as a dictionary, and selects the model with the best accuracy score.
+
+    Args:
+        hp_results: A list of dictionaries, where each dictionary contains a model 
+                    and associated metadata (including the accuracy score).
+
+    Returns:
+        The best possible model across all provided models.
     """
-    # Get the model from config
-    model_class = get_model_from_config(model_package=model_package, model_class=model_class)
-    
-    for search_key in search_grid:
-        if "range" in search_grid[search_key]:
-            search_grid[search_key] = range(search_grid[search_key]["range"]["start"],
-                                            search_grid[search_key]["range"]["end"],
-                                            search_grid[search_key]["range"].get("step",1))
-    
-    # Get the data and apply it
-    X_train = dataset_trn.drop(columns=[target])
-    y_train = dataset_trn[target]
-    X_test = dataset_tst.drop(columns=[target])
-    y_test = dataset_tst[target]
-    
-    logger.info("Running hyperparameter tuning ...")
-    
-    cv = RandomizedSearchCV(
-        estimator=model_class(),
-        param_distributions=search_grid, 
-        cv=3,
-        n_jobs=-1,
-        n_iter=10,
-        random_state=42
-        scoring="accuracy",
-        refit=True
-    )
-    
-    cv.fit(X=X_train, y=y_train)
-    y_pred  = cv.predict(X_test)
-    score = accuracy_score(y_test, y_pred)
-    # Need a file to log scoring as metadata including metric 
-    
-    return cv.best_estimator_
+    # Initialize variables to keep track of the best model and its score
+    best_model = None
+    best_score = -1
+
+    # Iterate over each result dictionary in the list
+    for result in hp_results:
+        # Assuming each result is a dictionary with keys 'model' and 'score'
+        current_model = result.get("model")
+        current_score = result.get("best_score", -1)  # Default to -1 if not found
+   
+        # Log the model and its score
+        logger.info(f"Model: {current_model}, Score: {current_score}")
+
+        # Check if this model has the best score so far
+        if current_score > best_score:
+            best_model = current_model
+            best_score = current_score
+
+    # Log the best model and its score
+    logger.info(f"Best Model: {best_model}, Best Score: {best_score}")
+
+    return best_model
