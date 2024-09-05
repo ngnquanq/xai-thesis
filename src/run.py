@@ -6,11 +6,11 @@ import os
 from typing import Optional
 
 from zenml.client import Client
-from zenml.logger import get_logger
-
+from logging import getLogger
 from pipelines import *
+from utils import *
 
-logger = get_logger(__name__)
+logger = getLogger(__name__)
 
 
 @click.command(
@@ -81,6 +81,22 @@ Examples:
     default=False,
     help="Whether to run only inference pipeline.",
 )
+@click.option(
+    "--synthesize-data",
+    is_flag=True,
+    help="Flag to indicate if synthetic data should be generated.",
+)
+@click.option(
+    "--model",
+    type=click.Choice(['gaussian', 'ctgan', 'copulagan'], case_sensitive=False),
+    help="Model to use for data synthesis.",
+)
+@click.option(
+    "--num-rows",
+    default=100,
+    type=int,
+    help="Number of rows of synthetic data to generate.",
+)
 def main(
     no_cache: bool = False,
     no_drop_na: bool = False,
@@ -91,83 +107,30 @@ def main(
     min_test_accuracy: float = 0.8,
     fail_on_accuracy_quality_gates: bool = False,
     only_inference: bool = False,
+    synthesize_data: bool = False,
+    model: Optional[str] = None,
+    num_rows: int = 100,
 ):
     """Main entry point for the pipeline execution.
-
-    This entrypoint is where everything comes together:
-
-      * configuring pipeline with the required parameters
-        (some of which may come from command line arguments)
-      * launching the pipeline
-
-    Args:
-        no_cache: If `True` cache will be disabled.
-        no_drop_na: If `True` NA values will not be dropped from the dataset.
-        no_normalize: If `True` normalization will not be done for the dataset.
-        drop_columns: List of comma-separated names of columns to drop from the dataset.
-        test_size: Percentage of records from the training dataset to go into the test dataset.
-        min_train_accuracy: Minimum acceptable accuracy on the train set.
-        min_test_accuracy: Minimum acceptable accuracy on the test set.
-        fail_on_accuracy_quality_gates: If `True` and any of minimal accuracy
-            thresholds are violated - the pipeline will fail. If `False` thresholds will
-            not affect the pipeline.
-        only_inference: If `True` only inference pipeline will be triggered.
+    ...
     """
-
-    # Run a pipeline with the required parameters. This executes
-    # all steps in the pipeline in the correct order using the orchestrator
-    # stack component that is configured in your active ZenML stack.
-    pipeline_args = {}
-    if no_cache:
-        pipeline_args["enable_cache"] = False
-
-    if not only_inference:
-        # Execute Training Pipeline
-        run_args_train = {
-            "drop_na": not no_drop_na,
-            "normalize": not no_normalize,
-            "test_size": test_size,
-            "min_train_accuracy": min_train_accuracy,
-            "min_test_accuracy": min_test_accuracy,
-            "fail_on_accuracy_quality_gates": fail_on_accuracy_quality_gates,
-        }
-        if drop_columns:
-            run_args_train["drop_columns"] = drop_columns.split(",")
-
-        pipeline_args["config_path"] = os.path.join(
-            os.path.dirname(os.path.realpath(__file__)),
-            "configs",
-            "train_config.yaml",
-        )
-        pipeline_args[
-            "run_name"
-        ] = f"e2e_use_case_for_churn_training_run_{dt.now().strftime('%Y_%m_%d_%H_%M_%S')}"
-        e2e_use_case_for_churn_training.with_options(**pipeline_args)(**run_args_train)
-        logger.info("Training pipeline finished successfully!")
-
-    # Execute Deployment Pipeline
-    run_args_inference = {}
-    pipeline_args["config_path"] = os.path.join(
-        os.path.dirname(os.path.realpath(__file__)),
-        "configs",
-        "deployer_config.yaml",
-    )
-    pipeline_args[
-        "run_name"
-    ] = f"e2e_use_case_for_churn_deployment_run_{dt.now().strftime('%Y_%m_%d_%H_%M_%S')}"
-    e2e_use_case_for_churn_deployment.with_options(**pipeline_args)(**run_args_inference)
-
-    # # Execute Batch Inference Pipeline
-    # run_args_inference = {}
-    # pipeline_args["config_path"] = os.path.join(
-    #     os.path.dirname(os.path.realpath(__file__)),
-    #     "configs",
-    #     "inference_config.yaml",
-    # )
-    # pipeline_args[
-    #     "run_name"
-    # ] = f"e2e_use_case_for_churn_batch_inference_run_{dt.now().strftime('%Y_%m_%d_%H_%M_%S')}"
-    # e2e_use_case_for_churn_batch_inference.with_options(**pipeline_args)(**run_args_inference)
+    # Check if synthetic data generation is requested
+    if synthesize_data:
+        if model is None:
+            logger.error("Model must be specified when synthesizing data.")
+            return
+        logger.info(f"Generating {num_rows} rows of synthetic data using the {model} model.")
+        # Call your data synthesis function here
+        if model == 'gaussian':
+            maker = Maker(GaussianCopulaSynthesizer)
+            synthetic_data = maker.create_data(num_rows=num_rows)
+            print(f"Generating {num_rows} rows of synthetic data using the {model} model in data/synthetic_data.csv")
+            maker.save_synthesizer(filename='GaussianCopular_synthesizer.pkl')
+        elif model == 'copulagan':
+            maker = Maker(CopulaGANSynthesizer)
+            synthetic_data = maker.create_data(num_rows=num_rows)
+            print(f"Generating {num_rows} rows of synthetic data using the {model} model in data/synthetic_data.csv")
+            maker.save_synthesizer(filename='CopulaGAN_synthesizer.pkl')
 
 
 
