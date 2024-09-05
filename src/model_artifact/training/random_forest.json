@@ -1,0 +1,5 @@
+{
+    "best_model": "RandomForestClassifier(criterion='entropy', max_depth=10, min_samples_leaf=2, n_estimators=50)", 
+    "best_score": 0.9385307346326837, 
+    "hyperparameters": {"n_estimators": 50, "min_samples_leaf": 2, "max_depth": 10, "criterion": "entropy"}
+}

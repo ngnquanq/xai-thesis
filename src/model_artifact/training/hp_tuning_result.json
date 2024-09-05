@@ -1,0 +1,48 @@
+[
+  {
+    "random_forest": {
+      "best_model": "RandomForestClassifier(criterion='entropy', max_depth=10, min_samples_leaf=2,n_estimators=50)",
+      "best_score": 0.9385307346326837,
+      "hyperparameters": {
+        "n_estimators": 50,
+        "min_samples_leaf": 2,
+        "max_depth": 10,
+        "criterion": "entropy"
+      }
+    }
+  },
+  {
+    "decision_tree": {
+      "best_model": "DecisionTreeClassifier(criterion='entropy', max_depth=10, min_samples_leaf=6)",
+      "best_score": 0.9370314842578711,
+      "hyperparameters": {
+        "min_samples_leaf": 6,
+        "max_depth": 10,
+        "criterion": "entropy"
+      }
+    }
+  },
+  {
+    "svm": {
+      "best_model": "SVC(C=10, kernel='poly')",
+      "best_score": 0.9265367316341829,
+      "hyperparameters": {
+        "kernel": "poly",
+        "gamma": "scale",
+        "degree": 3,
+        "C": 10
+      }
+    }
+  },
+  {
+    "logistic_regression": {
+      "best_model": "LogisticRegression(C=100, max_iter=200, solver='saga')",
+      "best_score": 0.8575712143928036,
+      "hyperparameters": {
+        "solver": "saga",
+        "max_iter": 200,
+        "C": 100
+      }
+    }
+  }
+]

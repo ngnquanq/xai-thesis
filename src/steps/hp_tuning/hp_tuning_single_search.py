@@ -82,6 +82,6 @@ def hp_tuning_single_search(
         "best_score": score,
         "hyperparameters": cv.best_params_
     }
-    save_metadata(best_model_info, 'hp_result.json')
+    #save_metadata(best_model_info, 'hp_result.json')
     ### YOUR CODE ENDS HERE ###
-    return cv.best_estimator_
+    return cv.best_estimator_, best_model_info

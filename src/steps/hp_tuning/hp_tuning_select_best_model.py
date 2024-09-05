@@ -1,44 +1,73 @@
-from typing import List, Dict
-from typing_extensions import Annotated
-from sklearn.base import ClassifierMixin
-from logging import getLogger
+import importlib
+import yaml
+import json
+from utils.helper import string_to_dict
 
-logger = getLogger(__name__)
+def hp_tuning_select_best_model(train_config_path):
+    # Load the train configuration from YAML
+    with open(train_config_path, 'r') as f:
+        train_config = yaml.safe_load(f)
 
-def hp_tuning_select_best_model(
-    hp_results: List[Dict[str, Annotated[ClassifierMixin, "hp_result"]]],
-) -> Annotated[ClassifierMixin, "best_model"]:
-    """Find the best model across all HP tuning attempts.
+    # Extract the best model string
+    
+    # Load the hp_tuning_result.json file
+    with open('model_artifact/training/hp_tuning_result.json', 'r') as f:
+        hp_tuning_results = json.load(f)
+    
+    # Find the model with the highest best_score
+    best_model_info = max(
+        (model_info 
+         for result in hp_tuning_results 
+         for model_info in result.values()),
+        key=lambda x: x['best_score']
+    )
+    
+    # Extract the best model string
+    best_model_str = best_model_info['best_model']
+    
+    
+    # Extract the class name (e.g., DecisionTreeClassifier)
+    class_name = best_model_str.split('(')[0].strip()  # Get the class name before the '('
 
-    This function takes the results from multiple hyperparameter tuning steps,
-    each represented as a dictionary, and selects the model with the best accuracy score.
+    # Find the corresponding model package in the model_search_space
+    model_package = None
+    for model_key, model_info in train_config['parameters']['model_search_space'].items():
+        if model_info['model_class'] == class_name:
+            model_package = model_info['model_package']
+            break
 
-    Args:
-        hp_results: A list of dictionaries, where each dictionary contains a model 
-                    and associated metadata (including the accuracy score).
+    if model_package is None:
+        raise ValueError(f"Model package for {class_name} not found in the configuration.")
 
-    Returns:
-        The best possible model across all provided models.
-    """
-    # Initialize variables to keep track of the best model and its score
-    best_model = None
-    best_score = -1
+    # Dynamically import the model class
+    module = importlib.import_module(model_package)
+    model_class = getattr(module, class_name)
 
-    # Iterate over each result dictionary in the list
-    for result in hp_results:
-        # Assuming each result is a dictionary with keys 'model' and 'score'
-        current_model = result.get("model")
-        current_score = result.get("best_score", -1)  # Default to -1 if not found
-   
-        # Log the model and its score
-        logger.info(f"Model: {current_model}, Score: {current_score}")
+    # Extract parameters from the best_model string
+    params_str = best_model_str[best_model_str.index('(') + 1:-1]  # Get the parameters inside the parentheses
+    params = string_to_dict(param_str=params_str)
 
-        # Check if this model has the best score so far
-        if current_score > best_score:
-            best_model = current_model
-            best_score = current_score
+    # Instantiate the model with the parameters
+    model_instance = model_class(**params)
 
-    # Log the best model and its score
-    logger.info(f"Best Model: {best_model}, Best Score: {best_score}")
+    return model_instance
 
-    return best_model
+# Test the hp_tuning_select_best_model function
+if __name__ == '__main__':
+    try:
+        # Specify the path to the train config
+        train_config_path = 'configs/train_config.yaml'
+        
+        # Call the function
+        best_model = hp_tuning_select_best_model(train_config_path)
+        
+        # Print the result
+        print("Best model selected:")
+        print(f"Model type: {type(best_model).__name__}")
+        print(f"Model parameters: {best_model.get_params()}")
+        
+        print("\nFunction test completed successfully.")
+    except Exception as e:
+        print(f"An error occurred while testing the function: {str(e)}")
+
+

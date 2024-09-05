@@ -1,7 +1,7 @@
 import yaml
 from typing import List, Optional, Any, Dict
 import random
-
+import json
 from steps import (
     data_loader,
     model_evaluator,
@@ -11,14 +11,19 @@ from steps import (
     hp_tuning_select_best_model,
     hp_tuning_single_search,
 )
+
+from utils import (
+    load_model_search_space, 
+    string_to_dict
+)
 from logging import getLogger
 
 logger = getLogger(__name__)
 
-def load_model_search_space(file_path: str) -> Dict[str, Any]:
-    with open(file_path, 'r') as file:
-        config = yaml.safe_load(file)
-    return config['parameters']['model_search_space']
+# def load_model_search_space(file_path: str) -> Dict[str, Any]:
+#     with open(file_path, 'r') as file:
+#         config = yaml.safe_load(file)
+#     return config['parameters']['model_search_space']
 
 def training(
     model_search_space: Dict[str, Any],
@@ -40,7 +45,7 @@ def training(
     for config_name, model_search_configuration in model_search_space.items():
         step_name = f"{search_steps_prefix}{config_name}"
         model_name = f"{config_name}"
-        model_best_params = hp_tuning_single_search(
+        model_best_params, model_info = hp_tuning_single_search(
             model_package=model_search_configuration["model_package"],
             model_class=model_search_configuration["model_class"],
             search_grid=model_search_configuration["search_grid"],
@@ -48,12 +53,19 @@ def training(
             dataset_tst=dataset_tst,
             target=target
         )
-        hp_tuning_final.append({model_name: model_best_params})
+        hp_tuning_final.append({model_name: model_info})
         
         # Save model best parameters to JSON file
-        import json
         with open(f'model_artifact/training/{model_name}.json', 'w') as json_file:
-            json.dump(model_best_params, json_file)
+            json.dump(model_info, json_file)
+            
+    # Save hp_tuning_final results to JSON file
+    with open('model_artifact/training/hp_tuning_result.json', 'w') as json_file:
+        json.dump(hp_tuning_final, json_file, indent=2)
+    
+    logger.info("HP tuning results saved to model_artifact/training/hp_tuning_result.json")
+    ###################### Select best model ###################################### 
+    model = hp_tuning_select_best_model(train_config_path='configs/train_config.yaml')
 
 if __name__ == '__main__':
     # Load the model search space from the YAML file
