@@ -10,15 +10,16 @@ class Maker:
         self.metadata = SingleTableMetadata()
         self.df = pd.read_csv(self.data_path)
         self.metadata.detect_from_dataframe(self.df)
+        self.synthesizer = None
 
     def create_data(self, synthesizer_class, num_rows):
         if synthesizer_class not in [GaussianCopulaSynthesizer, CTGANSynthesizer, CopulaGANSynthesizer]:
             raise ValueError("Invalid synthesizer class")
 
-        synthesizer = synthesizer_class(self.metadata)
-        synthesizer.fit(self.df)
+        self.synthesizer = synthesizer_class(self.metadata)
+        self.synthesizer.fit(self.df)
 
-        synthetic_data = synthesizer.sample(num_rows=num_rows)
+        synthetic_data = self.synthesizer.sample(num_rows=num_rows)
         
         # Ensure the directory exists
         import os
@@ -26,8 +27,12 @@ class Maker:
         
         synthetic_data.to_csv(self.output_path, index=False)
         return synthetic_data
+    
+    def parameters(self):
+        return self.synthesizer.get_parameters()
 
 # Example usage:
-# maker = Maker('data/telecom_churn.csv', 'data/synthetic_data.csv')
-# synthetic_data = maker.create_data(GaussianCopulaSynthesizer)
-# print(synthetic_data)
+maker = Maker()
+synthetic_data = maker.create_data(GaussianCopulaSynthesizer, 10)
+print(synthetic_data)
+print(maker.parameters())
