@@ -1,1 +1,52 @@
 # Setting configuration for synthesize
+gan_parameters:
+  enforce_min_max_values: true
+  enforce_rounding: false
+  epochs: 500
+  verbose: true
+  numerical_distributions:
+    "State": "uniform"
+    "Account length": "norm"
+    "Area code": "gaussian_kde"
+    "International plan": "beta"
+    "Voice mail plan": "beta"
+    "Number vmail messages": "gaussian_kde"
+    "Total day minutes": "norm"
+    "Total day calls": "norm"
+    "Total day charge": "norm"
+    "Total eve minutes": "norm"
+    "Total eve calls": "norm"
+    "Total eve charge": "norm"
+    "Total night minutes": "norm"
+    "Total night calls": "norm"
+    "Total night charge": "norm"
+    "Total intl minutes": "norm"
+    "Total intl calls": "gamma"
+    "Total intl charge": "norm"
+    "Customer service calls": "gaussian_kde"
+    "Churn": "beta"
+
+gaussian_parameters:
+  enforce_min_max_values: true
+  enforce_rounding: false
+  numerical_distributions:
+    "State": "uniform"
+    "Account length": "norm"
+    "Area code": "gaussian_kde"
+    "International plan": "beta"
+    "Voice mail plan": "beta"
+    "Number vmail messages": "gaussian_kde"
+    "Total day minutes": "norm"
+    "Total day calls": "norm"
+    "Total day charge": "norm"
+    "Total eve minutes": "norm"
+    "Total eve calls": "norm"
+    "Total eve charge": "norm"
+    "Total night minutes": "norm"
+    "Total night calls": "norm"
+    "Total night charge": "norm"
+    "Total intl minutes": "norm"
+    "Total intl calls": "gamma"
+    "Total intl charge": "norm"
+    "Customer service calls": "gaussian_kde"
+    "Churn": "beta"
