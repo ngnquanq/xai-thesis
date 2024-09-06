@@ -2,8 +2,11 @@ import importlib
 import yaml
 import json
 from utils.helper import string_to_dict
+from sklearn.base import ClassifierMixin
+import pickle
 
-def hp_tuning_select_best_model(train_config_path):
+
+def hp_tuning_select_best_model(train_config_path) -> ClassifierMixin:
     # Load the train configuration from YAML
     with open(train_config_path, 'r') as f:
         train_config = yaml.safe_load(f)
@@ -45,10 +48,27 @@ def hp_tuning_select_best_model(train_config_path):
 
     # Extract parameters from the best_model string
     params_str = best_model_str[best_model_str.index('(') + 1:-1]  # Get the parameters inside the parentheses
+    #print(params_str)
     params = string_to_dict(param_str=params_str)
+    #print(params)
 
     # Instantiate the model with the parameters
     model_instance = model_class(**params)
+    # Load the fitted model using pickle
+    if class_name == 'DecisionTreeClassifier':
+        with open('model_artifact/training/decision_tree.pkl', 'rb') as pkl_file:
+            model_instance = pickle.load(pkl_file)
+    elif class_name == 'LogisticRegression':
+        with open('model_artifact/training/logistic_regression.pkl', 'rb') as pkl_file:
+            model_instance = pickle.load(pkl_file)
+    elif class_name == 'SVC':
+        with open('model_artifact/training/svm.pkl', 'rb') as pkl_file:
+            model_instance = pickle.load(pkl_file)
+    elif class_name == 'RandomForestClassifier':
+        with open('model_artifact/training/random_forest.pkl', 'rb') as pkl_file:
+            model_instance = pickle.load(pkl_file)
+    else:
+        raise ValueError(f"Model class {class_name} not supported.")
 
     return model_instance
 

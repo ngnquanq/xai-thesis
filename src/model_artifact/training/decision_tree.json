@@ -1,5 +1,1 @@
-{
-    "best_model": "DecisionTreeClassifier(criterion='entropy', max_depth=10, min_samples_leaf=6)", 
-    "best_score": 0.9370314842578711, 
-    "hyperparameters": {"min_samples_leaf": 6, "max_depth": 10, "criterion": "entropy"}
-}
+{"best_model": "DecisionTreeClassifier(max_depth=8, min_samples_leaf=4)", "best_score": 0.9415292353823088, "hyperparameters": {"min_samples_leaf": 4, "max_depth": 8, "criterion": "gini"}}

@@ -1,5 +1,5 @@
 
-from typing import Tuple
+from typing import Tuple, Optional
 
 import pandas as pd
 from sklearn.datasets import load_breast_cancer
@@ -13,7 +13,9 @@ logger = get_logger(__name__)
 
 
 def data_loader(
-    random_state: int, is_inference: bool = False
+    random_state: int, 
+    is_inference: bool = False,
+    inference_data: Optional[str] = None
 ) -> Tuple[
     Annotated[pd.DataFrame, "dataset"],
     Annotated[str, "target"],
@@ -45,8 +47,10 @@ def data_loader(
     # dataset: pd.DataFrame = dataset.frame
     inference_subset = dataset.sample(inference_size, random_state=random_state)
     if is_inference:
-        dataset = inference_subset
-        dataset.drop(columns=target, inplace=True)
+        dataset = pd.read_csv("data/synthetic_data.csv")
+        target = dataset["Churn"]
+        dataset = dataset.drop(columns=["Churn"])
+        #dataset.drop(columns=target, inplace=True)
     else:
         #dataset.drop(inference_subset.index, inplace=True)
         pass

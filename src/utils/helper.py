@@ -20,7 +20,7 @@ def string_to_dict(param_str):
             except ValueError:
                 pass  # keep the value as string if it cannot be converted to int/float
         param_dict[key] = value
-    return 
+    return param_dict
 
 def load_model_search_space(file_path: str) -> Dict[str, Any]:
     with open(file_path, 'r') as file:

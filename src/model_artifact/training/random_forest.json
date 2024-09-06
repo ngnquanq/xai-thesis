@@ -1,5 +1,1 @@
-{
-    "best_model": "RandomForestClassifier(criterion='entropy', max_depth=10, min_samples_leaf=2, n_estimators=50)", 
-    "best_score": 0.9385307346326837, 
-    "hyperparameters": {"n_estimators": 50, "min_samples_leaf": 2, "max_depth": 10, "criterion": "entropy"}
-}
+{"best_model": "RandomForestClassifier(max_depth=12, min_samples_leaf=3, n_estimators=400)", "best_score": 0.9430284857571214, "hyperparameters": {"n_estimators": 400, "min_samples_leaf": 3, "max_depth": 12, "criterion": "gini"}}

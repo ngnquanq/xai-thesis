@@ -1,24 +1,24 @@
 [
   {
     "random_forest": {
-      "best_model": "RandomForestClassifier(criterion='entropy', max_depth=10, min_samples_leaf=2,n_estimators=50)",
-      "best_score": 0.9385307346326837,
+      "best_model": "RandomForestClassifier(max_depth=12, min_samples_leaf=3, n_estimators=400)",
+      "best_score": 0.9430284857571214,
       "hyperparameters": {
-        "n_estimators": 50,
-        "min_samples_leaf": 2,
-        "max_depth": 10,
-        "criterion": "entropy"
+        "n_estimators": 400,
+        "min_samples_leaf": 3,
+        "max_depth": 12,
+        "criterion": "gini"
       }
     }
   },
   {
     "decision_tree": {
-      "best_model": "DecisionTreeClassifier(criterion='entropy', max_depth=10, min_samples_leaf=6)",
-      "best_score": 0.9370314842578711,
+      "best_model": "DecisionTreeClassifier(max_depth=8, min_samples_leaf=4)",
+      "best_score": 0.9415292353823088,
       "hyperparameters": {
-        "min_samples_leaf": 6,
-        "max_depth": 10,
-        "criterion": "entropy"
+        "min_samples_leaf": 4,
+        "max_depth": 8,
+        "criterion": "gini"
       }
     }
   },
