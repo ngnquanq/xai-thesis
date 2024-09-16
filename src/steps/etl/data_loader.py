@@ -49,7 +49,7 @@ def data_loader(
     if is_inference:
         dataset = pd.read_csv("data/synthetic_data.csv")
         target = dataset["Churn"]
-        dataset = dataset.drop(columns=["Churn"])
+        #dataset = dataset.drop(columns=["Churn"])
         #dataset.drop(columns=target, inplace=True)
     else:
         #dataset.drop(inference_subset.index, inplace=True)
