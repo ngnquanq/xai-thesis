@@ -27,4 +27,6 @@ These resources provide a range of tools and methodologies for making AI models 
 
 2. [Concerns when intereprete Decision Tree]()
 
-3. [Concerns when ]
+3. [Concerns when interprete SVM]()
+
+4. [Concerns when interprete Random Forest](https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-8-25) - This paper introduces bias in random forest variable important measures.

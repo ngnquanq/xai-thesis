@@ -16,11 +16,7 @@ def data_loader(
     random_state: int, 
     is_inference: bool = False,
     inference_data: Optional[str] = None
-) -> Tuple[
-    Annotated[pd.DataFrame, "dataset"],
-    Annotated[str, "target"],
-    Annotated[int, "random_state"],
-]:
+):
     """Dataset reader step.
 
     This is an example of a dataset reader step that load Breast Cancer dataset.
@@ -48,8 +44,6 @@ def data_loader(
     inference_subset = dataset.sample(inference_size, random_state=random_state)
     if is_inference:
         dataset = pd.read_csv("data/synthetic_data.csv")
-        target = dataset["Churn"]
-        dataset = dataset.drop(columns=["Churn"])
         #dataset.drop(columns=target, inplace=True)
     else:
         #dataset.drop(inference_subset.index, inplace=True)
