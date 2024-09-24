@@ -16,7 +16,6 @@ from .inference_data_preprocessor import *
 from .train_data_splitter import *
 
 
-@step
 def train_data_preprocessor(
     dataset_trn: Optional[pd.DataFrame] = None,
     dataset_tst: Optional[pd.DataFrame] = None,
