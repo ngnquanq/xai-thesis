@@ -7,7 +7,7 @@ from typing_extensions import Annotated
 import pandas as pd
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import MinMaxScaler, StandardScaler
-from utils.preprocess import ColumnsDropper, DataFrameCaster, NADropper, Mapper, HandlingNull, EncodeCategorical, ConvertDataType, NormalizeData, DataPreProcessStrategy, DataCleaning
+from utils.preprocess import DataPreProcessStrategy, DataCleaning
 from zenml import step
 
 # These following modules is for testing purpose
