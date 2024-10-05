@@ -1,46 +1,40 @@
 from steps.hp_tuning.hp_tuning_select_best_model import hp_tuning_select_best_model
 from steps.etl.data_loader import *
-from steps.etl.inference_data_preprocessor import *
-from sklearn.metrics import f1_score, recall_score, precision_score, accuracy_score
+from steps.etl.train_data_preprocessor import *
+from joblib import load
+import numpy as np 
 
 def inference(train_config_path):
-    # Load the best model
+    # Load the best model parameters
     best_model = hp_tuning_select_best_model(train_config_path)
 
+    # Load the fitted model from the PKL file
+    class_name = best_model.__class__.__name__  # Assuming the model name can be derived from the class name
+    if class_name == 'DecisionTreeClassifier':
+        with open('model_artifact/training/decision_tree.pkl', 'rb') as pkl_file:
+            model_instance = load(pkl_file)
+    elif class_name == 'LogisticRegression':
+        with open('model_artifact/training/logistic_regression.pkl', 'rb') as pkl_file:
+            model_instance = load(pkl_file)
+    elif class_name == 'SVC':
+        with open('model_artifact/training/svm.pkl', 'rb') as pkl_file:
+            model_instance = load(pkl_file)
+    elif class_name == 'RandomForestClassifier':
+        with open('model_artifact/training/random_forest.pkl', 'rb') as pkl_file:
+            model_instance = load(pkl_file)
+    else:
+        raise ValueError(f"Model class {class_name} not supported.")
     # Load the data
     dataset, target, random_state = data_loader(random_state=42, is_inference=True, inference_data="data/synthetic_data.csv")
-    print(dataset.columns)
-    inference_dataframe = inference_data_preprocessor(data=dataset)
-    X_test = inference_dataframe.drop('Churn', axis=1)
-    y_test = inference_dataframe['Churn']
-    
-    # Fit the model
-    #prediction = best_model.fit(dataset,target)
+    dataset_trn, dataset_tst, pipeline = train_data_preprocessor(dataset_tst=dataset)
+
+    print(dataset)
+    print(target)
+    # Perform inference (predict) instead of fitting
+    prediction = model_instance.predict(dataset_tst)  # Use predict instead of fit
     
     # Evaluate the model
-    evaluating = best_model.score(X_test, y_test)
-    # Calculate additional evaluation metrics    
-    # Make predictions
-    y_pred = best_model.predict(X_test)
-    
-    # Calculate scores
-    f1 = f1_score(y_test, y_pred, average='weighted')
-    recall = recall_score(y_test, y_pred, average='weighted')
-    precision = precision_score(y_test, y_pred, average='weighted')
-    accuracy = accuracy_score(y_test, y_pred)
-    
-    # Create a dictionary of scores
-    scores = {
-        'accuracy': accuracy,
-        'f1_score': f1,
-        'recall': recall,
-        'precision': precision
-    }
-    
-    # Print the scores
-    print("\nAdditional evaluation metrics:")
-    for metric, score in scores.items():
-        print(f"{metric}: {score:.4f}")
+    evaluating = model_instance.score(dataset_tst, target)
     
     return evaluating
 

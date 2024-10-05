@@ -17,8 +17,8 @@ from .train_data_splitter import *
 
 
 def train_data_preprocessor(
-    dataset_trn: pd.DataFrame,
-    dataset_tst: pd.DataFrame,
+    dataset_trn: Optional[pd.DataFrame] = None,
+    dataset_tst: Optional[pd.DataFrame] = None,
     mapping: Dict[str, float] = {'False': 0.0, 'True': 1.0},
     convert_data: Optional[bool] = True,
     handle_na: Optional[bool] = True, 
@@ -104,13 +104,14 @@ def train_data_preprocessor(
     # Example usage with your training and test datasets
     # dataset_trn = pd.DataFrame(...)  # Your training dataset
     # dataset_tst = pd.DataFrame(...)  # Your test dataset
-
-    # Fit the pipeline on the training data and transform it
-    dataset_trn = pipeline.fit_transform(dataset_trn)
-
-    # Transform the test data using the same pipeline
-    dataset_tst = pipeline.transform(dataset_tst)
-    
+    dataset_trn = None
+    dataset_tst = None
+    if dataset_trn is not None:
+        # Fit the pipeline on the training data and transform it
+        dataset_trn = pipeline.fit_transform(dataset_trn)
+    if dataset_tst is not None:
+        # Transform the test data using the same pipeline
+        dataset_tst = pipeline.transform(dataset_tst)
     return dataset_trn, dataset_tst, pipeline
 
 if __name__ == '__main__':
