@@ -1,1 +1,0 @@
-{"best_model": "SVC(C=10, kernel='poly')", "best_score": 0.9265367316341829, "hyperparameters": {"kernel": "poly", "gamma": "scale", "degree": 3, "C": 10}}

@@ -1,1 +1,0 @@
-{"best_model": "LogisticRegression(C=100, max_iter=200, solver='saga')", "best_score": 0.8575712143928036, "hyperparameters": {"solver": "saga", "max_iter": 200, "C": 100}}

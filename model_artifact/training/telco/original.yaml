@@ -1,0 +1,29 @@
+models:
+- hyperparameters:
+    criterion: entropy
+    max_depth: 8
+    min_samples_leaf: 10
+    n_estimators: 500
+  name: Random Forest
+  negative_log_loss: -0.41218187305016246
+- hyperparameters:
+    criterion: gini
+    max_depth: 6
+    min_samples_leaf: 10
+  name: Decision Tree
+  negative_log_loss: -0.5373757012299025
+- hyperparameters:
+    C: 100
+    max_iter: 100
+    solver: liblinear
+  name: Logistic Regression
+  negative_log_loss: -0.41461791010305565
+- hyperparameters:
+    gamma: 0.3
+    learning_rate: 0.1
+    max_depth: 7
+    n_estimators: 500
+    reg_alpha: 0.1
+    reg_lambda: 1
+  name: XGBoost
+  negative_log_loss: -0.42526176570556834
