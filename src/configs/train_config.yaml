@@ -1,16 +1,3 @@
-# 
-
-# environment configuration
-settings:
-  docker:
-    required_integrations:
-      - aws
-      - kubeflow
-      - kubernetes
-      - mlflow
-      - sklearn
-      - slack
-
 # configuration of steps  
 steps:
   model_trainer:
@@ -23,24 +10,6 @@ steps:
     parameters:
       notify_on_success: False
 
-# configuration of the Model Control Plane
-model:
-  name: model
-  license: none
-  description: e2e_use_case_for_churn E2E Batch Use Case
-  audience: All ZenML users
-  use_cases: |
-    The ZenML E2E project for Churn prediction project demonstrates how the most important steps of 
-    the ML Production Lifecycle can be implemented in a reusable way remaining 
-    agnostic to the underlying infrastructure, and shows how to integrate them together 
-    into pipelines for Training and Batch Inference purposes.
-  ethics: No impact.
-  tags:
-  - e2e
-  - batch
-  - sklearn
-  - from template
-  - ZenML delivered
 
 # pipeline level extra configurations
 extra:
@@ -94,25 +63,6 @@ parameters:
             start: 1
             end: 10
 
-    svm:
-      model_package: sklearn.svm
-      model_class: SVC  # Support Vector Classifier
-      search_grid:
-        C:
-          - 0.1
-          - 1
-          - 10
-          - 100
-        kernel:
-          - linear
-          - poly
-          - rbf
-          - sigmoid
-        degree:
-          - 3  # Used for 'poly' kernel, typically fixed
-        gamma:
-          - scale
-          - auto
 
     logistic_regression:
       model_package: sklearn.linear_model
@@ -133,3 +83,77 @@ parameters:
           - 100
           - 200
           - 500
+    xgboost:
+      model_package: xgboost
+      model_class: XGBClassifier
+      search_grid:
+        n_estimators:
+          range:
+            start: 50
+            end: 500
+            step: 50
+        max_depth:
+          - 3
+          - 5
+          - 7
+          - 9
+          - 12
+        learning_rate:
+          - 0.01
+          - 0.05
+          - 0.1
+          - 0.2
+        subsample:
+          - 0.6
+          - 0.8
+          - 1.0
+        colsample_bytree:
+          - 0.6
+          - 0.8
+          - 1.0
+        gamma:
+          - 0
+          - 0.1
+          - 0.2
+          - 0.3
+        reg_alpha:
+          - 0
+          - 0.01
+          - 0.1
+        reg_lambda:
+          - 1
+          - 0.1
+          - 0.01
+    mlp:
+      model_package: sklearn.neural_network
+      model_class: MLPClassifier
+      search_grid:
+        hidden_layer_sizes:
+          - (50,)
+          - (100,)
+          - (100, 50)
+          - (50, 100)
+          - (100, 100)
+        activation:
+          - relu
+          - tanh
+          - logistic
+        solver:
+          - adam
+          - sgd
+          - lbfgs
+        alpha:
+          - 0.0001
+          - 0.001
+          - 0.01
+          - 0.1
+        learning_rate:
+          - constant
+          - adaptive
+        max_iter:
+          - 200
+          - 500
+          - 1000
+        early_stopping:
+          - True
+          - False
