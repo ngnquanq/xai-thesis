@@ -1,0 +1,42 @@
+Random Forest:
+  criterion:
+    - gini  # Most common
+  max_depth:
+    - 6
+    - 8  # Reduced to two key options
+  min_samples_leaf:
+    - 7  # Removed 10 to focus on fewer leaf nodes
+  n_estimators:
+    - 400  # Kept a single value to reduce training time
+
+Decision Tree:
+  criterion:
+    - gini  # Focus on a single value
+  max_depth:
+    - 6  # Reduced depth for faster training
+  min_samples_leaf:
+    - 7  # Removed 10 to reduce options
+
+Logistic Regression:
+  C:
+    - 1
+    - 10  # Focus on common, well-performing values
+  solver:
+    - lbfgs
+    - saga  # Keep just two solvers with good performance
+  max_iter:
+    - 100  # Stick with the default
+
+XGBoost:
+  n_estimators:
+    - 400  # Single value to reduce training time
+  max_depth:
+    - 7  # Focus on one depth
+  learning_rate:
+    - 0.1  # Common learning rate
+  gamma:
+    - 0.1  # Single value
+  reg_alpha:
+    - 0.01  # Reduced options for regularization
+  reg_lambda:
+    - 1  # Reduced options for regularization
