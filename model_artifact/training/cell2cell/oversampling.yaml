@@ -5,13 +5,19 @@ models:
     min_samples_leaf: 7
     n_estimators: 400
   name: Random Forest
-  negative_log_loss: -0.5991539053915466
+  negative_log_loss: -0.5941914558335678
 - hyperparameters:
     criterion: gini
     max_depth: 6
     min_samples_leaf: 7
   name: Decision Tree
-  negative_log_loss: -0.6116679242379938
+  negative_log_loss: -0.6175191826532485
+- hyperparameters:
+    C: 10
+    max_iter: 100
+    solver: saga
+  name: Logistic Regression
+  negative_log_loss: -0.6688157117562827
 - hyperparameters:
     gamma: 0.1
     learning_rate: 0.1
@@ -20,10 +26,4 @@ models:
     reg_alpha: 0.01
     reg_lambda: 1
   name: XGBoost
-  negative_log_loss: -0.47915977589693676
-- hyperparameters:
-    C: 1
-    max_iter: 100
-    solver: lbfgs
-  name: Logistic Regression
-  negative_log_loss: -0.6709879048349813
+  negative_log_loss: -0.4849233526197472
