@@ -71,7 +71,7 @@ def generate_shap_plot(selected_class):
     shap_plot = shap.force_plot(explainer_object.base_values[0][0], explainer_object.values[i,:,0], instance, matplotlib=True, text_rotation=15, figsize=(15,3))  # Adjust to use expected value and shap_values for class 1 (Churn)
     
     # Save the plot to a file and return the file path for Gradio
-    plot_path = "shap_force_plot.png"
+    plot_path = f"./app_images/shap_force_plot_instance_{i}.png"
     plt.savefig(plot_path, bbox_inches='tight')
     plt.close()
     
