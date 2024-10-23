@@ -47,6 +47,8 @@ Report
 ------------
 The document can be found in this [link](https://drive.google.com/file/d/1cod4tCBYJwZKWWbkWskrM3rYaHpd_Eak/view?usp=sharing).
 
+The shorter version (the presentation slides) can be found in this [link](https://drive.google.com/file/d/188LVQg_MfmwEAYRv9-b1zyyl3FkegfHK/view?usp=sharing).
+
 Future works
 ------------
 Future works will focus on upgrade the application. 
