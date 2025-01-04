@@ -28,7 +28,8 @@ requirements:
 ## Make Dataset
 data: requirements
 	$(PYTHON_INTERPRETER) src/data/make_dataset.py
-	$(KAGGLE) datasets download kashnitsky/mlcourse -f telecom_churn.csv -p src/data
+	$(KAGGLE) datasets download kashnitsky/mlcourse -f telecom_churn.csv -p data
+	$(KAGGLE) datasets download jpacse/datasets-for-churn-telecom -f cell2celltrain.csv -p data
 
 
 ## Delete all compiled Python files
