@@ -27,10 +27,12 @@ requirements:
 
 
 ## Make Dataset
-data: requirements
-	
-	$(KAGGLE) datasets download kashnitsky/mlcourse -f telecom_churn.csv -p data
-	$(KAGGLE) datasets download jpacse/datasets-for-churn-telecom -f cell2celltrain.csv -p data
+data: 
+	mkdir -p data/raw data/processed data/external data/internal
+	$(KAGGLE) datasets download kashnitsky/mlcourse -f telecom_churn.csv -p data/raw
+	$(KAGGLE) datasets download jpacse/datasets-for-churn-telecom -f cell2celltrain.csv -p data/raw
+	if [ -f data/raw/telecom_churn.csv.zip ]; then unzip data/raw/telecom_churn.csv.zip -d data/raw && rm data/raw/telecom_churn.csv.zip; fi
+	if [ -f data/raw/cell2celltrain.csv.zip ]; then unzip data/raw/cell2celltrain.csv.zip -d data/raw && rm data/raw/cell2celltrain.csv.zip; fi
 
 
 ## Delete all compiled Python files
