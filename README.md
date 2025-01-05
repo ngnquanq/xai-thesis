@@ -1,6 +1,19 @@
 XAI-thesis
 ==============================
 
+In coming
+------------
+- Crawling data daily with cronjob.
+- Restructure repository for further development.
+- Automating feature engineering process with Agent.
+- Create tools for LLM (using OpenAI API) to interprete (tools will be related to the SHAP values - (stored in a .csv file).
+- Adding causal inference framework for reliable solutions.
+- ReAct for decision making steps.
+- Build with DevOps principles + proper testing and planning.
+  
+Quick view
+------------
+
 This is the code for my thesis, which focuses on Explainable AI (XAI) for enhancing customer churn prediction. The repository is organized following a clear structure to ensure reproducibility and ease of understanding. It includes essential files like the LICENSE for legal information, a Makefile for automating tasks such as data preparation and model training, and a README.md providing an overview of the project. The main application is in app.py, supported by additional scripts such as test_environment.py to ensure the environment is correctly set up. The requirements.txt details the dependencies needed to replicate the results, while tox.ini (although this is for future works, therefore it is not related to the thesis) contains settings for continuous testing. The project setup is facilitated by setup.py, which makes it installable. Configuration files are stored in the configs folder, while trained models and artifacts are kept in model_artifact. Jupyter notebooks for data exploration and experimentation are located in the notebooks folder. The src directory contains the source code (although this is for future works, therefore it is not related to the thesis), and app_images holds images used in the application interface. This structure ensures a logical flow for working with XAI methods to analyze and interpret customer churn predictions. 
 
 Project Organization
