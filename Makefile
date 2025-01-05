@@ -23,11 +23,12 @@ endif
 
 ## Install Python Dependencies
 requirements: 
-	$(PYTHON_INTERPRETER) -m pip install -r requirements.txt
+	$(PYTHON_INTERPRETER) -m pip install -r requirements.txt; 
+
 
 ## Make Dataset
 data: requirements
-	$(PYTHON_INTERPRETER) src/data/make_dataset.py
+	
 	$(KAGGLE) datasets download kashnitsky/mlcourse -f telecom_churn.csv -p data
 	$(KAGGLE) datasets download jpacse/datasets-for-churn-telecom -f cell2celltrain.csv -p data
 
@@ -48,9 +49,9 @@ create_environment:
 ifeq (True,$(HAS_CONDA))
 		@echo ">>> Detected conda, creating conda environment."
 ifeq (3,$(findstring 3,$(PYTHON_INTERPRETER)))
-	conda create --name $(PROJECT_NAME) python=3
+	conda create --name $(PROJECT_NAME) python=3.9 -y
 else
-	conda create --name $(PROJECT_NAME) python=2.7
+	conda create --name $(PROJECT_NAME) python=3.9 -y
 endif
 		@echo ">>> New conda env created. Activate with:\nsource activate $(PROJECT_NAME)"
 else
