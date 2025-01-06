@@ -29,10 +29,20 @@ requirements:
 ## Make Dataset
 data: 
 	mkdir -p data/raw data/processed data/external data/internal
-	$(KAGGLE) datasets download kashnitsky/mlcourse -f telecom_churn.csv -p data/raw
-	$(KAGGLE) datasets download jpacse/datasets-for-churn-telecom -f cell2celltrain.csv -p data/raw
+
+	# Download telecom_churn.csv from Kaggle
+	if [ ! -f data/raw/telco_churn.csv ]; then $(KAGGLE) datasets download kashnitsky/mlcourse -f telecom_churn.csv -p data/raw ; fi
+
+	# Download cell2celltrain.csv from Kaggle
+	if [ ! -f data/raw/cell2celltrain.csv ]; then $(KAGGLE) datasets download jpacse/datasets-for-churn-telecom -f cell2celltrain.csv -p data/raw; fi
+
+	# Download telco_customer_churn.csv from Kaggle
+	if [ ! -f data/raw/WA_Fn-UseC_-Telco-Customer-Churn.csv ]; then $(KAGGLE) datasets download nithinreddy90/wa-fn-usec-telco-customer-churn -f WA_Fn-UseC_-Telco-Customer-Churn.csv -p data/raw; fi
+
+	# Unzip files
 	if [ -f data/raw/telecom_churn.csv.zip ]; then unzip data/raw/telecom_churn.csv.zip -d data/raw && rm data/raw/telecom_churn.csv.zip; fi
 	if [ -f data/raw/cell2celltrain.csv.zip ]; then unzip data/raw/cell2celltrain.csv.zip -d data/raw && rm data/raw/cell2celltrain.csv.zip; fi
+	if [ -f data/raw/WA_Fn-UseC_-Telco-Customer-Churn.csv.zip ]; then unzip data/raw/WA_Fn-UseC_-Telco-Customer-Churn.csv.zip -d data/raw && mv data/raw/WA_Fn-UseC_-Telco-Customer-Churn.csv data/raw/telco_customer_churn.csv && rm data/raw/WA_Fn-UseC_-Telco-Customer-Churn.csv.zip; fi
 
 
 ## Delete all compiled Python files
