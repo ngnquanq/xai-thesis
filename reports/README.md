@@ -1,0 +1,1 @@
+This folder contains powerbi reports as well as the theme config. Additionally, these reports also serve as guidances and potential insights for further developing. Currently, I am setting up environments to create these reports. 
